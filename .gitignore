@@ -1,0 +1,25 @@
+# Archivos generados por Django
+*.pyc
+__pycache__/
+db.sqlite3
+
+# Entornos virtuales de Python
+venv/
+env/
+
+# Otros archivos generados
+.DS_Store
+
+# Archivos de configuración locales
+*.log
+*.pot
+*.pyc
+local_settings.py
+
+# Dependencias instaladas por pip
+# (Agrega otras dependencias que no quieres incluir en control de versiones)
+/venv/
+/env/
+/.vscode/
+/.idea/
+/.vs/
