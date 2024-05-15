@@ -21,5 +21,5 @@ from .views import *
 urlpatterns = [    
     path('create/', Create.as_view(), name='crear_persona'),
     path('read/', ReadAll.as_view(), name='leer_persona'),
-    path('r/<str:command>', mi_vista.as_view(), name='l'),
+    path('<str:command>', mi_vista.as_view(), name='l'),
 ]

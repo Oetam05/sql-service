@@ -1,9 +1,8 @@
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Persona
 from .serializers import PersonaSerializer
-import threading
 from django.db import connection, OperationalError
 
 
@@ -22,7 +21,8 @@ class Create(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class mi_vista(APIView):
-    def get(self, request, command):    
+    def get(self, request, command):  
+        permission_classes = [permissions.AllowAny]  
         if command:
             try:
                 with connection.cursor() as cursor:
@@ -32,7 +32,13 @@ class mi_vista(APIView):
                         dict(zip(columns, row))
                         for row in cursor.fetchall()
                     ]
-                    return Response(resultados, status=status.HTTP_200_OK)  # Devolver los resultados como un JSON con las claves como nombres de columna
-            except OperationalError as e:                
-                return Response({"error":str(e)}, status=status.HTTP_400_BAD_REQUEST)  # Manejar el error de SQL
-        return Response({"error":'No se proporcionó un comando SQL válido'}, status=status.HTTP_400_BAD_REQUEST)
+                    response = Response(resultados, status=status.HTTP_200_OK)
+                    response["Access-Control-Allow-Origin"] = "*"
+                    return response  # Devolver los resultados como un JSON con las claves como nombres de columna
+            except OperationalError as e:
+                response = Response({"error":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+                response["Access-Control-Allow-Origin"] = "*"             
+                return response
+        response = Response({"error":'No se proporcionó un comando SQL válido'}, status=status.HTTP_400_BAD_REQUEST)
+        response["Access-Control-Allow-Origin"] = "*"
+        return response
