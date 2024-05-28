@@ -27,7 +27,7 @@ class mi_vista(APIView):
             try:
                 with connection.cursor() as cursor:
                     cursor.execute(command)
-                    columns = [col[0] for col in cursor.description]  # Obtener los nombres de las columnas
+                    columns = [col[0] for col in cursor.description] if cursor.description else []  # Check if cursor.description is not None
                     resultados = [
                         dict(zip(columns, row))
                         for row in cursor.fetchall()
